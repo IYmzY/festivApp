@@ -1,0 +1,27 @@
+<div class="authContainer">
+    <mat-card class="authContent">
+        <h2> Welcome back !</h2>
+        <h3>{{getHeaderText()}}</h3>
+        <div *ngIf="isInLogin()">
+            <input placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button mat-raised-button color="accent"> LOGIN</button>
+        </div>
+        <div *ngIf="isInRegister()">
+            <input placeholder="Email">
+            <input type="password" placeholder="Password">
+            <input type="password" placeholder="Confirm password">
+            <button mat-raised-button color="accent">REGISTER</button>
+        </div>
+        <div *ngIf="isInForgotPassword()">
+            <input placeholder="Email">
+            <button mat-raised-button color="accent">RESET</button>
+        </div>
+        <mat-card-actions class="loginStatesContainer">
+            <button *ngIf="!isInForgotPassword()" (click)="onForgotPasswordClick()" mat-flat-button>Forgot
+                Password</button>
+            <button *ngIf="!isInRegister()" (click)="onCreateAccountClick()" mat-flat-button>Create an account</button>
+            <button *ngIf="!isInLogin()" (click)="onLoginClick()" mat-flat-button>Login</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

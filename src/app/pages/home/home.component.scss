@@ -1,0 +1,61 @@
+.homeContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  .contentContainer {
+    width: 100vw;
+    height: 100vh;
+    background: rgba($color: #000000, $alpha: 1);
+    display: flex;
+    .landingContent {
+      height: 100%;
+      width: 50%;
+      margin-left: 5vw;
+      position: relative;
+      z-index: 1;
+      h1 {
+        color: white;
+        font-family: sfLogo;
+        font-size: 4rem;
+        margin-bottom: 10vh;
+        margin-top: 8vh;
+        letter-spacing: 10px;
+      }
+      p {
+        color: white;
+        font-family: sfTitle;
+        font-size: 3rem;
+        max-width: 36vw;
+        letter-spacing: 2px;
+      }
+    }
+    .landingConnexion {
+      height: 100%;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin-left: 5vw;
+      z-index: 1;
+    }
+  }
+  .backgroundContainer {
+    display: flex;
+    justify-content: center;
+
+    .topBackground {
+      position: absolute;
+      top: 3vh;
+      width: 15vw;
+      right: 43vw;
+    }
+    .bottomBackground {
+      position: absolute;
+      width: 23vw;
+      top: 40vh;
+      right: 40vw;
+    }
+  }
+}
