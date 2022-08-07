@@ -3,11 +3,11 @@ import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-main-app',
+  templateUrl: './main-app.component.html',
+  styleUrls: ['./main-app.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class MainAppComponent implements OnInit {
   auth = new FirebaseTSAuth();
 
   constructor(private router: Router) {}
@@ -18,9 +18,14 @@ export class HomeComponent implements OnInit {
       !this.auth.getAuth().currentUser?.emailVerified
     ) {
       this.router.navigate(['emailVerification']);
+      // this.auth.sendVerificationEmail();
     }
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
+  }
+
+  onLogoutClick() {
+    this.auth.signOut();
   }
 }

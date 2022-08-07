@@ -9,9 +9,11 @@ import { HomeComponent } from './pages/home/home.component';
 import { AuthenticatorComponent } from './components/authenticator/authenticator.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MainAppComponent } from './pages/main-app/main-app.component';
+import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, AuthenticatorComponent],
+  declarations: [AppComponent, HomeComponent, AuthenticatorComponent, MainAppComponent, EmailVerificationComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

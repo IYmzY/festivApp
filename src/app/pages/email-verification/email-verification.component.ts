@@ -3,11 +3,11 @@ import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-email-verification',
+  templateUrl: './email-verification.component.html',
+  styleUrls: ['./email-verification.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class EmailVerificationComponent implements OnInit {
   auth = new FirebaseTSAuth();
 
   constructor(private router: Router) {}
@@ -22,5 +22,11 @@ export class HomeComponent implements OnInit {
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
+    this.auth.sendVerificationEmail();
+  }
+
+  onResendClick() {
+    this.auth.sendVerificationEmail();
+    location.reload();
   }
 }
