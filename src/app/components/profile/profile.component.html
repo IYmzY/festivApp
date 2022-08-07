@@ -1,0 +1,14 @@
+<div class="profileContainer" [ngClass]="{'active': show, 'notActive':!show}">
+    <div class="profileContent">
+        <label for="file" class="profileImageContainer">
+            <input type="file" id="file" (change)="handleFileInput($event)" />
+            <span>Upload avatar</span>
+            <img [src]="currentImage" class="image-preview">
+        </label>
+        <input #nameInput placeholder=" Name">
+        <textarea #descriptionInput placeholder="Description"></textarea>
+        <button mat-flat-button color="accent" (click)="onSaveProfile(nameInput,descriptionInput)"
+            (click)="uploadFile()">Save
+            profile</button>
+    </div>
+</div>

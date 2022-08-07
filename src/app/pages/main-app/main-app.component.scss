@@ -7,20 +7,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  button {
-    background: transparent;
-    color: white;
-    font-family: sfText;
-    font-size: 1rem;
-    border: rgba(255, 255, 255, 0.5) 1px solid;
-    border-radius: 1.2rem;
-    padding: 0.2rem 1rem;
-    width: 12rem;
-    height: 12rem;
-    &:hover {
-      background-color: white;
-      color: black;
-      border: white 1px solid;
+
+  .appNav {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 12vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .logo {
+      width: 30%;
+      height: 100%;
+      color: white;
+      display: flex;
+      padding: 0.5rem 3rem;
+      font-family: sfLogo;
+      letter-spacing: 5px;
+      align-items: center;
+      img {
+        height: 10vh;
+        pointer-events: none;
+      }
+    }
+    .profileContainer {
+      margin-right: 3rem;
+      button {
+        background: transparent;
+        color: white;
+        font-family: sfLogo;
+        font-size: 1rem;
+        border-radius: 1.2rem;
+        padding: 0.2rem 1rem;
+        width: 8rem;
+        height: 3rem;
+        text-transform: capitalize;
+        margin: 0 0.5rem;
+        &:hover {
+          background-color: white;
+          color: black;
+          border: white 1px solid;
+        }
+        &.logOutButton {
+          border: rgba(255, 255, 255, 0.5) 1px solid;
+          color: rgba(255, 255, 255, 0.5);
+          text-transform: uppercase;
+          &:hover {
+            color: black !important;
+          }
+        }
+      }
     }
   }
 }

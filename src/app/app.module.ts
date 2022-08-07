@@ -11,9 +11,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MainAppComponent } from './pages/main-app/main-app.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, AuthenticatorComponent, MainAppComponent, EmailVerificationComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AuthenticatorComponent,
+    MainAppComponent,
+    EmailVerificationComponent,
+    ProfileComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

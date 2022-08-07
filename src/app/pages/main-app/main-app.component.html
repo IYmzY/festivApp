@@ -1,3 +1,15 @@
 <div class="appContainer">
-    <button class="logOutButton" (click)="onLogoutClick()" mat-flat-button>Log Out</button>
+    <div class="appNav">
+        <div class="logo">
+            <h1>Festiv'App</h1>
+            <img class="topBackground" src="../../../assets/backgrounds/cassetteBackground.webp">
+        </div>
+        <div class="profileContainer">
+            <button class="profileButton" (click)="onProfileClick()" mat-flat-button>Hello
+                {{userDocument.publicName}}</button>
+            <button class=" logOutButton" (click)="onLogoutClick()" mat-flat-button>Log Out</button>
+            <app-profile [show]="profileShowState()" (isProfile)="checkIsUpdated($event)"></app-profile>
+        </div>
+
+    </div>
 </div>
