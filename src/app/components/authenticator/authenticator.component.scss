@@ -3,7 +3,7 @@
   .authContent {
     display: flex;
     flex-direction: column;
-    height: 70vh;
+    height: fit-content;
     width: 27vw;
     background: transparent;
     border: rgba(255, 255, 255, 0.5) 1px solid;
@@ -40,6 +40,7 @@
         :-webkit-autofill:hover,
         :-webkit-autofill:focus {
           -webkit-box-shadow: 0 0 0 50px black inset;
+          box-shadow: 0 0 0 50px black inset;
           -webkit-text-fill-color: white;
           font-family: sfText;
           font-size: 1rem;
@@ -81,6 +82,7 @@
         border: rgba(255, 255, 255, 0.5) 1px solid;
         border-radius: 1.2rem;
         padding: 0.2rem 1rem;
+        width: 12rem;
         &:hover {
           background-color: white;
           color: black;
