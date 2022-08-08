@@ -18,12 +18,13 @@
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    position: relative;
     input,
     textarea {
       width: 100%;
       padding: 1em;
       border-radius: 1em;
-      margin-bottom: 0.5em;
+      margin: 1.5rem 0rem;
       resize: none;
       outline: none;
       border: 1px solid gray;
@@ -65,6 +66,13 @@
       input[type="file"] {
         display: none;
       }
+    }
+    .closeIcon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: red;
+      cursor: pointer;
     }
   }
 }

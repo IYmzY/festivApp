@@ -5,11 +5,12 @@
             <img class="topBackground" src="../../../assets/backgrounds/cassetteBackground.webp">
         </div>
         <div class="profileContainer">
-            <button class="profileButton" (click)="onProfileClick()" mat-flat-button>Hello
-                {{userDocument.publicName}}</button>
+            <button class="profileButton" (click)="onProfileClick()" mat-flat-button>
+                <img [src]="currentImage" class="profileImage">
+                <span>Hello {{currentUsername}}</span></button>
             <button class=" logOutButton" (click)="onLogoutClick()" mat-flat-button>Log Out</button>
-            <app-profile [show]="profileShowState()" (isProfile)="checkIsUpdated($event)"></app-profile>
+            <app-profile [show]="profileShowState()" (isProfile)="checkIsUpdated($event)"
+                (isProfilePictureUpdated)="checkProfilePictureIsUpdated($event)"></app-profile>
         </div>
-
     </div>
 </div>

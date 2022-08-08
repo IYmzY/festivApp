@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
 import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
+import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
 
 @Component({
   selector: 'app-main-app',
@@ -13,9 +14,20 @@ export class MainAppComponent implements OnInit {
 
   firestore = new FirebaseTSFirestore();
 
+  storage = new FirebaseTSStorage();
+
+  currentImage;
+
+  currentUsername = 'User';
+
+  currentDescription = 'Description';
+
   isProfile: boolean = false;
 
+  isProfilePictureUpdated: boolean;
+
   userDocument: UserDocument;
+
   constructor(private router: Router) {}
 
   ngOnInit(): void {
@@ -28,7 +40,11 @@ export class MainAppComponent implements OnInit {
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
+
     this.getUserProfile();
+    this.loadCurrentPreview();
+
+    this.onProfilePictureChange();
   }
 
   onLogoutClick() {
@@ -43,6 +59,17 @@ export class MainAppComponent implements OnInit {
     this.isProfile = update;
   }
 
+  checkProfilePictureIsUpdated(update: any) {
+    this.isProfilePictureUpdated = update;
+  }
+
+  onProfilePictureChange() {
+    if (this.isProfilePictureUpdated === true) {
+      this.loadCurrentPreview();
+      this.isProfilePictureUpdated = !this.isProfilePictureUpdated;
+    }
+  }
+
   profileShowState() {
     return this.isProfile;
   }
@@ -53,10 +80,25 @@ export class MainAppComponent implements OnInit {
       path: ['UsersProfile', this.auth.getAuth().currentUser?.uid!],
       onUpdate: (result) => {
         this.userDocument = <UserDocument>result.data();
-        this.isProfile = !result.exists;
-        if (!result.exists || this.userDocument.publicName === '') {
-          this.userDocument.publicName = 'User';
+        if (result.exists && this.userDocument.publicName.length > 0) {
+          this.currentUsername = this.userDocument.publicName;
         }
+        this.isProfile = !result.exists;
+      },
+    });
+  }
+
+  loadCurrentPreview() {
+    const loadImgProfile = (url) => {
+      this.currentImage = url;
+    };
+    this.storage.getDownloadUrl({
+      path: ['/Avatar', this.auth.getAuth().currentUser?.uid!],
+      onComplete(url) {
+        loadImgProfile(url);
+      },
+      onFail(err) {
+        console.log(err);
       },
     });
   }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
 import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
+import { UserDocument } from 'src/app/pages/main-app/main-app.component';
 
 @Component({
   selector: 'app-profile',
@@ -13,20 +14,27 @@ export class ProfileComponent implements OnInit {
 
   @Output() isProfile: EventEmitter<boolean> = new EventEmitter();
 
+  @Output() isProfilePictureUpdated: EventEmitter<boolean> = new EventEmitter();
+
   firestore: FirebaseTSFirestore;
 
   auth: FirebaseTSAuth;
 
   storage: FirebaseTSStorage;
 
+  userDocument: UserDocument;
+
   fileToUpload;
 
   filePath: string;
 
-  currentImage =
-    'https://api.iconify.design/mdi-light/account.svg?width=60&color=%0';
+  currentImage;
 
-  currentUser;
+  currentUsername = 'Username';
+
+  currentDescription = 'Description';
+
+  currentUserID;
 
   constructor() {
     this.firestore = new FirebaseTSFirestore();
@@ -35,35 +43,48 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUser = this.auth.getAuth().currentUser?.uid;
+    this.currentUserID = this.auth.getAuth().currentUser?.uid;
+    this.getUserProfile();
     this.loadCurrentPreview();
+    this.isProfilePictureUpdated.emit(false);
   }
   onSaveProfile(
     nameInput: HTMLInputElement,
     descriptionInput: HTMLTextAreaElement
   ) {
-    let name = nameInput.value;
-    let description = descriptionInput.value;
-    let imageProfile;
+    let name = nameInput.value.trim();
+    let description = descriptionInput.value.trim();
 
-    this.firestore.create({
-      path: ['UsersProfile', this.currentUser],
-      data: {
-        publicName: name,
-        description: description,
-        imageProfile: `/Avatar/${this.currentUser}`,
-      },
+    if (name.length > 0) {
+      this.firestore.update({
+        path: ['UsersProfile', this.currentUserID],
+        data: {
+          publicName: name,
+        },
 
-      onComplete: (docId) => {
-        nameInput.value = '';
-        descriptionInput.value = '';
-        imageProfile.value = '';
-        this.isProfile.emit(false);
-        this.show = false;
-      },
+        onComplete: (docId) => {
+          nameInput.value = '';
+        },
 
-      onFail: (err) => {},
-    });
+        onFail: (err) => {},
+      });
+    }
+    if (description.length > 0) {
+      this.firestore.update({
+        path: ['UsersProfile', this.currentUserID],
+        data: {
+          description: description,
+        },
+
+        onComplete: (docId) => {
+          descriptionInput.value = '';
+        },
+
+        onFail: (err) => {},
+      });
+    }
+    this.isProfile.emit(false);
+    this.show = false;
   }
   handleFileInput(file) {
     this.fileToUpload = file.target.files[0] as File;
@@ -80,12 +101,13 @@ export class ProfileComponent implements OnInit {
     if (this.fileToUpload) {
       this.storage.upload({
         uploadName: this.fileToUpload.name,
-        path: ['/Avatar', this.currentUser],
+        path: ['/Avatar', this.currentUserID],
         data: {
           data: this.fileToUpload,
           metadata: this.fileToUpload.type,
         },
       });
+      this.isProfilePictureUpdated.emit(true);
     }
   }
 
@@ -94,7 +116,7 @@ export class ProfileComponent implements OnInit {
       this.currentImage = url;
     };
     this.storage.getDownloadUrl({
-      path: ['/Avatar', this.currentUser],
+      path: ['/Avatar', this.currentUserID],
       onComplete(url) {
         loadImgProfile(url);
       },
@@ -102,5 +124,45 @@ export class ProfileComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  // loadCurrentDefaultPreview() {
+  //   if (this.currentImage === null) {
+  //     const loadDefaultImgProfile = (url) => {
+  //       this.currentImage = url;
+  //     };
+  //     this.storage.getDownloadUrl({
+  //       path: ['/Avatar', 'userIcon.svg'],
+  //       onComplete(url) {
+  //         loadDefaultImgProfile(url);
+  //       },
+  //       onFail(err) {
+  //         console.log(err);
+  //       },
+  //     });
+  //   }
+  // }
+
+  getUserProfile() {
+    if (this.currentUserID) {
+      this.firestore.listenToDocument({
+        name: 'Getting DOCUMENT',
+        path: ['UsersProfile', this.currentUserID],
+        onUpdate: (result) => {
+          this.userDocument = <UserDocument>result.data();
+          if (result.exists && this.userDocument.publicName.length > 0) {
+            this.currentUsername = this.userDocument.publicName;
+          }
+          if (result.exists && this.userDocument.description.length > 0) {
+            this.currentDescription = this.userDocument.description;
+          }
+        },
+      });
+    }
+  }
+
+  onCloseProfile() {
+    this.isProfile.emit(false);
+    this.show = false;
   }
 }
