@@ -18,6 +18,8 @@ export class MainAppComponent implements OnInit {
 
   currentImage;
 
+  currentRandomImageProfile;
+
   currentUsername = 'User';
 
   currentDescription = 'Description';
@@ -40,10 +42,10 @@ export class MainAppComponent implements OnInit {
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
-
+    this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
+    this.loadRandomDefaultProfilePreview();
     this.getUserProfile();
     this.loadCurrentPreview();
-
     this.onProfilePictureChange();
   }
 
@@ -101,6 +103,26 @@ export class MainAppComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  loadRandomDefaultProfilePreview() {
+    const loadImgProfile = (url) => {
+      this.currentImage = url;
+    };
+    this.storage.getDownloadUrl({
+      path: ['/Avatar', `userIcon${this.currentRandomImageProfile}.webp`],
+      onComplete(url) {
+        loadImgProfile(url);
+      },
+      onFail(err) {
+        console.log(err);
+      },
+    });
+  }
+  getRandomImageProfile(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }
 

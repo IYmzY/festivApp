@@ -9,8 +9,9 @@
                 <img [src]="currentImage" class="profileImage">
                 <span>Hello {{currentUsername}}</span></button>
             <button class=" logOutButton" (click)="onLogoutClick()" mat-flat-button>Log Out</button>
-            <app-profile [show]="profileShowState()" (isProfile)="checkIsUpdated($event)"
-                (isProfilePictureUpdated)="checkProfilePictureIsUpdated($event)"></app-profile>
+            <app-profile [show]="profileShowState()" [randomProfileSetter]="currentRandomImageProfile"
+                (isProfile)="checkIsUpdated($event)" (isProfilePictureUpdated)="checkProfilePictureIsUpdated($event)">
+            </app-profile>
         </div>
     </div>
 </div>

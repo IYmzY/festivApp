@@ -12,6 +12,8 @@ import { UserDocument } from 'src/app/pages/main-app/main-app.component';
 export class ProfileComponent implements OnInit {
   @Input() show: boolean = false;
 
+  @Input() randomProfileSetter: number;
+
   @Output() isProfile: EventEmitter<boolean> = new EventEmitter();
 
   @Output() isProfilePictureUpdated: EventEmitter<boolean> = new EventEmitter();
@@ -44,6 +46,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
+    this.loadRandomDefaultProfilePreview();
     this.getUserProfile();
     this.loadCurrentPreview();
     this.isProfilePictureUpdated.emit(false);
@@ -126,23 +129,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // loadCurrentDefaultPreview() {
-  //   if (this.currentImage === null) {
-  //     const loadDefaultImgProfile = (url) => {
-  //       this.currentImage = url;
-  //     };
-  //     this.storage.getDownloadUrl({
-  //       path: ['/Avatar', 'userIcon.svg'],
-  //       onComplete(url) {
-  //         loadDefaultImgProfile(url);
-  //       },
-  //       onFail(err) {
-  //         console.log(err);
-  //       },
-  //     });
-  //   }
-  // }
-
   getUserProfile() {
     if (this.currentUserID) {
       this.firestore.listenToDocument({
@@ -164,5 +150,26 @@ export class ProfileComponent implements OnInit {
   onCloseProfile() {
     this.isProfile.emit(false);
     this.show = false;
+  }
+
+  loadRandomDefaultProfilePreview() {
+    const loadImgProfile = (url) => {
+      this.currentImage = url;
+    };
+    this.storage.getDownloadUrl({
+      path: ['/Avatar', `userIcon${this.randomProfileSetter}.webp`],
+      onComplete(url) {
+        loadImgProfile(url);
+      },
+      onFail(err) {
+        console.log(err);
+      },
+    });
+  }
+
+  getRandomImageProfile(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }

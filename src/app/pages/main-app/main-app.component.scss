@@ -59,7 +59,9 @@
           }
         }
         .profileImage {
-          height: 102%;
+          height: 3rem;
+          width: 3rem;
+          object-fit: cover;
           border-radius: 50%;
           position: absolute;
           left: -1px;
