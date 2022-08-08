@@ -8,6 +8,28 @@
   justify-content: center;
   align-items: center;
 
+  .postButton {
+    position: absolute;
+    bottom: 3vh;
+    right: 3vw;
+    background-color: white;
+    color: #000000;
+    font-size: 2rem;
+    font-family: sfTitle;
+    font-weight: 700;
+    border: 3px solid white;
+    text-align: center;
+    padding: 0;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    &:hover {
+      background-color: black;
+      color: white;
+      border: 3px solid white;
+    }
+  }
+
   .appNav {
     position: absolute;
     top: 0;

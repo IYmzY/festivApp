@@ -3,6 +3,8 @@ import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
 import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
 import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
+import { MatDialog } from '@angular/material/dialog';
+import { CreatePostComponent } from 'src/app/components/create-post/create-post.component';
 
 @Component({
   selector: 'app-main-app',
@@ -30,7 +32,7 @@ export class MainAppComponent implements OnInit {
 
   userDocument: UserDocument;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     if (
@@ -123,6 +125,10 @@ export class MainAppComponent implements OnInit {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  onPostButtonClick() {
+    this.dialog.open(CreatePostComponent);
   }
 }
 

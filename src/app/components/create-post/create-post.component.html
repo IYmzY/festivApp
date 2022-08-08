@@ -1,0 +1,16 @@
+<mat-card class="createPostContainer">
+    <h2>Create Post</h2>
+    <div class="contentContainer">
+        <textarea placeholder="Type Message..."></textarea>
+    </div>
+    <div class="postImagePreviewContainer">
+        <img *ngIf="fileToUploadInPost" [src]="currentImageInPost" class="postImagePreview">
+    </div>
+    <mat-card-actions class="postButtonsActions">
+        <label for="fileInPost" class="postImageContainer">
+            <input type="file" id="fileInPost" (change)="handleFileInputInPost($event)" />
+            <img src="../../../assets/icons/postImageIcon.svg" class="imagePost">
+        </label>
+        <button mat-flat-button color="accent" class="postButton">Share</button>
+    </mat-card-actions>
+</mat-card>

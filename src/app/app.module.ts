@@ -12,6 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MainAppComponent } from './pages/main-app/main-app.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { CreatePostComponent } from './components/create-post/create-post.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +24,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     MainAppComponent,
     EmailVerificationComponent,
     ProfileComponent,
+    CreatePostComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
