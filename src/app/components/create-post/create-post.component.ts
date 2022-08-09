@@ -34,7 +34,9 @@ export class CreatePostComponent implements OnInit {
 
   currentImageProfileUrl;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUserProfile();
+  }
 
   handleFileInputInPost(fileInPost) {
     this.fileToUploadInPost = fileInPost.target.files[0] as File;
@@ -52,7 +54,6 @@ export class CreatePostComponent implements OnInit {
     this.firestore.getDocument({
       path: ['UsersProfile', this.auth.getAuth().currentUser?.uid!],
       onComplete: (result) => {
-        // this.userDocument = <UserDocument>result.data();
         if (result.exists && result.data()?.publicName.length > 0) {
           this.username = result.data()?.publicName;
         }

@@ -109,26 +109,24 @@ export class MainAppComponent implements OnInit, OnDestroy {
     });
   }
 
-  async loadCurrentPreview() {
+  loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
       this.isPreviewLoaded = true;
     };
-    await this.storage
-      .getDownloadUrl({
-        path: ['/Avatar', this.currentUserID],
-        onComplete: (url) => {
-          loadImgProfile(url);
-        },
-        onFail(err) {
-          console.log(err);
-        },
-      })
-      .then(() => {
-        if (this.isPreviewLoaded === false) {
-          this.loadRandomDefaultProfilePreview();
-        }
-      });
+    this.storage.getDownloadUrl({
+      path: ['/Avatar', this.currentUserID],
+      onComplete: (url) => {
+        loadImgProfile(url);
+      },
+      onFail(err) {
+        console.log(err);
+      },
+    });
+
+    if (this.isPreviewLoaded === false) {
+      this.loadRandomDefaultProfilePreview();
+    }
   }
 
   async loadRandomDefaultProfilePreview() {
@@ -178,6 +176,7 @@ export class MainAppComponent implements OnInit, OnDestroy {
 export interface UserDocument {
   publicName: string;
   description: string;
+  imageProfile: string;
 }
 
 export interface PostData {

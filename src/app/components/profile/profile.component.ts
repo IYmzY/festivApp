@@ -47,8 +47,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
-    this.getUserProfile();
     this.loadCurrentPreview();
+    this.getUserProfile();
     console.log(this.isPreviewLoaded);
   }
   async onSaveProfile(
@@ -109,27 +109,34 @@ export class ProfileComponent implements OnInit {
           data: this.fileToUpload,
           metadata: this.fileToUpload.type,
         },
-        onComplete: (downloadUrl) => {
+        onComplete: async (downloadUrl) => {
           this.festivDataService.sendProfilePictureUpdate(true);
+          await this.firestore.update({
+            path: ['UsersProfile', this.currentUserID],
+            data: {
+              imageProfile: downloadUrl,
+            },
+          });
         },
       });
     }
   }
 
-  async loadCurrentPreview() {
+  loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
       this.isPreviewLoaded = true;
     };
-    await this.storage.getDownloadUrl({
+    this.storage.getDownloadUrl({
       path: ['/Avatar', this.currentUserID],
       onComplete(url) {
         loadImgProfile(url);
       },
-      onFail: (err) => {
-        this.loadRandomDefaultProfilePreview();
-      },
+      onFail: (err) => {},
     });
+    if (this.isPreviewLoaded === false) {
+      this.loadRandomDefaultProfilePreview();
+    }
   }
 
   async getUserProfile() {
@@ -142,30 +149,20 @@ export class ProfileComponent implements OnInit {
           if (result.exists && this.userDocument.publicName.length > 0) {
             this.currentUsername = this.userDocument.publicName;
           }
+          if (result.exists && !this.userDocument.imageProfile) {
+            await this.firestore.update({
+              path: ['UsersProfile', this.currentUserID],
+              data: {
+                imageProfile: this.currentImage,
+              },
+            });
+          }
           if (!result.exists) {
             await this.firestore.create({
               path: ['UsersProfile', this.currentUserID],
               data: {
                 publicName: `User${this.getRandomImageProfile(1, 999999)}`,
-              },
-              onComplete: async () => {
-                await this.storage.getDownloadUrl({
-                  path: ['/Avatar', `userIcon${this.randomProfileSetter}.webp`],
-                  onComplete: async (url) => {
-                    this.randomImage = url;
-                    await this.storage.upload({
-                      uploadName: url,
-                      path: ['/Avatar', this.currentUserID],
-                      data: {
-                        data: this.randomImage,
-                        metadata: this.randomImage.type,
-                      },
-                    });
-                  },
-                  onFail(err) {
-                    console.log(err);
-                  },
-                });
+                imageProfile: this.currentImage,
               },
             });
           }
