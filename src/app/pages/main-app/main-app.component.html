@@ -14,6 +14,11 @@
             </app-profile>
         </div>
     </div>
+    <div class="postFeedContainer">
+        <app-post *ngFor="let post of posts" [postData]="post" [currentUsername]="currentUsername"
+            [currentImage]="currentImage">
+        </app-post>
+    </div>
     <button (click)="onPostButtonClick()" mat-flat-button color="accent" class="postButton">
         +
     </button>

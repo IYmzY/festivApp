@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
-import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
+import {
+  FirebaseTSFirestore,
+  OrderBy,
+} from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
 import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePostComponent } from 'src/app/components/create-post/create-post.component';
@@ -22,7 +25,7 @@ export class MainAppComponent implements OnInit {
 
   currentRandomImageProfile;
 
-  currentUsername = 'User';
+  currentUsername;
 
   currentDescription = 'Description';
 
@@ -32,9 +35,16 @@ export class MainAppComponent implements OnInit {
 
   userDocument: UserDocument;
 
+  posts: PostData[] = [];
+
+  isPreviewLoaded: boolean = false;
+
+  currentUserID;
+
   constructor(private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.currentUserID = this.auth.getAuth().currentUser?.uid;
     if (
       this.auth.isSignedIn() &&
       !this.auth.getAuth().currentUser?.emailVerified
@@ -45,10 +55,10 @@ export class MainAppComponent implements OnInit {
       this.router.navigate(['connect']);
     }
     this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
-    this.loadRandomDefaultProfilePreview();
     this.getUserProfile();
     this.loadCurrentPreview();
     this.onProfilePictureChange();
+    this.getposts();
   }
 
   onLogoutClick() {
@@ -81,7 +91,7 @@ export class MainAppComponent implements OnInit {
   getUserProfile() {
     this.firestore.listenToDocument({
       name: 'Getting DOCUMENT',
-      path: ['UsersProfile', this.auth.getAuth().currentUser?.uid!],
+      path: ['UsersProfile', this.currentUserID!],
       onUpdate: (result) => {
         this.userDocument = <UserDocument>result.data();
         if (result.exists && this.userDocument.publicName.length > 0) {
@@ -95,16 +105,23 @@ export class MainAppComponent implements OnInit {
   loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
+      this.isPreviewLoaded = true;
     };
-    this.storage.getDownloadUrl({
-      path: ['/Avatar', this.auth.getAuth().currentUser?.uid!],
-      onComplete(url) {
-        loadImgProfile(url);
-      },
-      onFail(err) {
-        console.log(err);
-      },
-    });
+    this.storage
+      .getDownloadUrl({
+        path: ['/Avatar', this.currentUserID],
+        onComplete(url) {
+          loadImgProfile(url);
+        },
+        onFail(err) {
+          console.log(err);
+        },
+      })
+      .then(() => {
+        if (this.isPreviewLoaded === false) {
+          this.loadRandomDefaultProfilePreview();
+        }
+      });
   }
 
   loadRandomDefaultProfilePreview() {
@@ -130,9 +147,30 @@ export class MainAppComponent implements OnInit {
   onPostButtonClick() {
     this.dialog.open(CreatePostComponent);
   }
+
+  getposts() {
+    this.firestore.getCollection({
+      path: ['Posts'],
+      where: [new OrderBy('timestamp', 'desc')],
+      onComplete: (result) => {
+        result.docs.forEach((doc) => {
+          let post = <PostData>doc.data();
+          this.posts.push(post);
+        });
+      },
+      onFail: (err) => {},
+    });
+  }
 }
 
 export interface UserDocument {
   publicName: string;
   description: string;
+}
+
+export interface PostData {
+  postContent: string;
+  creatorId: string;
+  imageUrl?: string;
+  creatorUsername: string;
 }

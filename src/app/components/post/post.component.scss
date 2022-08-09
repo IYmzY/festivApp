@@ -1,0 +1,33 @@
+.postContainer {
+  .postHeaderContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    .profileImage {
+      height: 3rem;
+      width: 3rem;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+    }
+    .postTitle {
+      background: transparent;
+      color: black;
+      font-family: sfLogo;
+      font-size: 1.5rem;
+      text-transform: capitalize;
+      margin: 0 0.5rem;
+    }
+  }
+  img {
+  }
+  .postContent {
+  }
+  .postActionsContainer {
+    .postActionItem {
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+  }
+}

@@ -32,11 +32,13 @@ export class ProfileComponent implements OnInit {
 
   currentImage;
 
-  currentUsername = 'Username';
+  currentUsername;
 
   currentDescription = 'Description';
 
   currentUserID;
+
+  isPreviewLoaded: boolean = false;
 
   constructor() {
     this.firestore = new FirebaseTSFirestore();
@@ -46,7 +48,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
-    this.loadRandomDefaultProfilePreview();
     this.getUserProfile();
     this.loadCurrentPreview();
     this.isProfilePictureUpdated.emit(false);
@@ -117,16 +118,23 @@ export class ProfileComponent implements OnInit {
   loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
+      this.isPreviewLoaded = true;
     };
-    this.storage.getDownloadUrl({
-      path: ['/Avatar', this.currentUserID],
-      onComplete(url) {
-        loadImgProfile(url);
-      },
-      onFail(err) {
-        console.log(err);
-      },
-    });
+    this.storage
+      .getDownloadUrl({
+        path: ['/Avatar', this.currentUserID],
+        onComplete(url) {
+          loadImgProfile(url);
+        },
+        onFail(err) {
+          console.log(err);
+        },
+      })
+      .then(() => {
+        if (this.isPreviewLoaded === false) {
+          this.loadRandomDefaultProfilePreview();
+        }
+      });
   }
 
   getUserProfile() {
@@ -138,6 +146,14 @@ export class ProfileComponent implements OnInit {
           this.userDocument = <UserDocument>result.data();
           if (result.exists && this.userDocument.publicName.length > 0) {
             this.currentUsername = this.userDocument.publicName;
+          }
+          if (!result.exists) {
+            this.firestore.create({
+              path: ['UsersProfile', this.currentUserID],
+              data: {
+                publicName: `User${this.getRandomImageProfile(1, 999999)}`,
+              },
+            });
           }
           if (result.exists && this.userDocument.description.length > 0) {
             this.currentDescription = this.userDocument.description;

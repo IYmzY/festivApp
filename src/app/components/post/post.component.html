@@ -1,0 +1,15 @@
+<mat-card class="postContainer">
+    <div class="postHeaderContainer">
+        <img [src]="currentImage" class="profileImage">
+        <h2 class="postTitle">{{postData.creatorUsername}}</h2>
+    </div>
+    <img mat-card-image [src]="postData?.imageUrl">
+    <mat-card-content class="postContent" *ngIf="postData.postContent">
+        {{postData.postContent}}
+    </mat-card-content>
+    <mat-card-actions class="postActionsContainer">
+        <mat-icon class="postActionItem" color="accent">chat_bubble_outline</mat-icon>
+        <mat-icon class="postActionItem" color="accent">favorite_border</mat-icon>
+        <mat-icon class="postActionItem" color="accent">save</mat-icon>
+    </mat-card-actions>
+</mat-card>

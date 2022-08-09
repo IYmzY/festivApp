@@ -36,8 +36,15 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    span {
+      font-family: sfLogo;
+      color: rgba(0, 0, 0, 0.2);
+      font-weight: 100;
+      margin-right: auto;
+      margin-left: 0.5rem;
+    }
     .postImageContainer {
-      margin-right: 0.5rem;
+      margin-right: 0.75rem;
       display: flex;
       justify-content: center;
       cursor: pointer;

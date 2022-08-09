@@ -29,7 +29,10 @@
       border: 3px solid white;
     }
   }
-
+  .postFeedContainer {
+    max-width: 500px;
+    margin: 2.5rem auto;
+  }
   .appNav {
     position: absolute;
     top: 0;
