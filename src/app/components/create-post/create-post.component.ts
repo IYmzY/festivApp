@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
 import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
 import { FirebaseTSApp } from 'firebasets/firebasetsApp/firebaseTSApp';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserDocument } from 'src/app/pages/main-app/main-app.component';
+import { SharingFestivDataService } from 'src/app/services/sharing-festiv-data.service';
 
 @Component({
   selector: 'app-create-post',
@@ -12,7 +13,10 @@ import { UserDocument } from 'src/app/pages/main-app/main-app.component';
   styleUrls: ['./create-post.component.scss'],
 })
 export class CreatePostComponent implements OnInit {
-  constructor(private dialog: MatDialogRef<CreatePostComponent>) {}
+  constructor(
+    private dialog: MatDialogRef<CreatePostComponent>,
+    private festivDataService: SharingFestivDataService
+  ) {}
 
   fileToUploadInPost;
 
@@ -28,11 +32,9 @@ export class CreatePostComponent implements OnInit {
 
   username: string;
 
-  ngOnInit(): void {
-    this.getUserProfile();
-    if (this.fileToUploadInPost) console.log(this.fileToUploadInPost);
-    console.log(this.username);
-  }
+  currentImageProfileUrl;
+
+  ngOnInit(): void {}
 
   handleFileInputInPost(fileInPost) {
     this.fileToUploadInPost = fileInPost.target.files[0] as File;
@@ -54,13 +56,16 @@ export class CreatePostComponent implements OnInit {
         if (result.exists && result.data()?.publicName.length > 0) {
           this.username = result.data()?.publicName;
         }
+        if (result.exists && result.data()?.imageProfile) {
+          this.currentImageProfileUrl = result.data()?.imageProfile;
+        }
       },
     });
   }
   onShareClick(post: HTMLTextAreaElement) {
     let postContent = post.value;
     let postId = this.firestore.genDocId();
-    if (this.fileToUploadInPost) {
+    if (this.fileToUploadInPost && postContent.length <= 350) {
       this.storage.upload({
         uploadName: 'upload Image & post content',
         path: ['Posts', postId, 'imagePost'],
@@ -76,9 +81,11 @@ export class CreatePostComponent implements OnInit {
               imageUrl: downloadUrl,
               timestamp: FirebaseTSApp.getFirestoreTimestamp(),
               creatorUsername: this.username,
+              imageProfile: this.currentImageProfileUrl,
             },
             onComplete: (docId) => {
               this.dialog.close();
+              this.festivDataService.sendPostsUpdate(true);
             },
           });
         },

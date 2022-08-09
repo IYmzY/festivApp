@@ -1,13 +1,13 @@
 <mat-card class="createPostContainer">
     <h2>Create Post</h2>
     <div class="contentContainer">
-        <textarea #postContent placeholder="Type Message..."></textarea>
+        <textarea #postContent maxlength="350" placeholder="Type Message..."></textarea>
     </div>
     <div class="postImagePreviewContainer">
         <img *ngIf="fileToUploadInPost" [src]="currentImageInPost" class="postImagePreview">
     </div>
     <mat-card-actions class="postButtonsActions">
-        <span>You can't share posts without photo</span>
+        <span>You can only share posts with photo & lesser than 350 characters </span>
         <label for="fileInPost" class="postImageContainer">
             <input type="file" id="fileInPost" (change)="handleFileInputInPost($event)" />
             <img src="../../../assets/icons/postImageIcon.svg" class="imagePost">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FirebaseTSAuth } from 'firebasets/firebasetsAuth/firebaseTSAuth';
 import { Router } from '@angular/router';
 import {
@@ -8,13 +8,15 @@ import {
 import { FirebaseTSStorage } from 'firebasets/firebasetsStorage/firebaseTSStorage';
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePostComponent } from 'src/app/components/create-post/create-post.component';
+import { SharingFestivDataService } from 'src/app/services/sharing-festiv-data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-app',
   templateUrl: './main-app.component.html',
   styleUrls: ['./main-app.component.scss'],
 })
-export class MainAppComponent implements OnInit {
+export class MainAppComponent implements OnInit, OnDestroy {
   auth = new FirebaseTSAuth();
 
   firestore = new FirebaseTSFirestore();
@@ -31,7 +33,7 @@ export class MainAppComponent implements OnInit {
 
   isProfile: boolean = false;
 
-  isProfilePictureUpdated: boolean;
+  isProfilePictureChanged: boolean;
 
   userDocument: UserDocument;
 
@@ -41,7 +43,24 @@ export class MainAppComponent implements OnInit {
 
   currentUserID;
 
-  constructor(private router: Router, private dialog: MatDialog) {}
+  subscription: Subscription;
+
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private festivDataService: SharingFestivDataService
+  ) {
+    this.subscription = this.festivDataService
+      .getProfilePictureUpdate()
+      .subscribe(() => {
+        this.loadCurrentPreview();
+      });
+    this.subscription = this.festivDataService
+      .getPostsUpdate()
+      .subscribe(() => {
+        this.getposts();
+      });
+  }
 
   ngOnInit(): void {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
@@ -57,7 +76,6 @@ export class MainAppComponent implements OnInit {
     this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
     this.getUserProfile();
     this.loadCurrentPreview();
-    this.onProfilePictureChange();
     this.getposts();
   }
 
@@ -73,23 +91,12 @@ export class MainAppComponent implements OnInit {
     this.isProfile = update;
   }
 
-  checkProfilePictureIsUpdated(update: any) {
-    this.isProfilePictureUpdated = update;
-  }
-
-  onProfilePictureChange() {
-    if (this.isProfilePictureUpdated === true) {
-      this.loadCurrentPreview();
-      this.isProfilePictureUpdated = !this.isProfilePictureUpdated;
-    }
-  }
-
   profileShowState() {
     return this.isProfile;
   }
 
-  getUserProfile() {
-    this.firestore.listenToDocument({
+  async getUserProfile() {
+    await this.firestore.listenToDocument({
       name: 'Getting DOCUMENT',
       path: ['UsersProfile', this.currentUserID!],
       onUpdate: (result) => {
@@ -102,15 +109,15 @@ export class MainAppComponent implements OnInit {
     });
   }
 
-  loadCurrentPreview() {
+  async loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
       this.isPreviewLoaded = true;
     };
-    this.storage
+    await this.storage
       .getDownloadUrl({
         path: ['/Avatar', this.currentUserID],
-        onComplete(url) {
+        onComplete: (url) => {
           loadImgProfile(url);
         },
         onFail(err) {
@@ -124,13 +131,13 @@ export class MainAppComponent implements OnInit {
       });
   }
 
-  loadRandomDefaultProfilePreview() {
+  async loadRandomDefaultProfilePreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
     };
-    this.storage.getDownloadUrl({
+    await this.storage.getDownloadUrl({
       path: ['/Avatar', `userIcon${this.currentRandomImageProfile}.webp`],
-      onComplete(url) {
+      onComplete: (url) => {
         loadImgProfile(url);
       },
       onFail(err) {
@@ -138,6 +145,7 @@ export class MainAppComponent implements OnInit {
       },
     });
   }
+
   getRandomImageProfile(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -148,8 +156,8 @@ export class MainAppComponent implements OnInit {
     this.dialog.open(CreatePostComponent);
   }
 
-  getposts() {
-    this.firestore.getCollection({
+  async getposts() {
+    await this.firestore.getCollection({
       path: ['Posts'],
       where: [new OrderBy('timestamp', 'desc')],
       onComplete: (result) => {
@@ -160,6 +168,10 @@ export class MainAppComponent implements OnInit {
       },
       onFail: (err) => {},
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
 
@@ -173,4 +185,5 @@ export interface PostData {
   creatorId: string;
   imageUrl?: string;
   creatorUsername: string;
+  imageProfile: string;
 }
