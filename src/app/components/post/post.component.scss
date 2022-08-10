@@ -1,4 +1,7 @@
 .postContainer {
+  width: 38vw;
+  min-width: 350px;
+  margin-bottom: 1.5rem;
   .postHeaderContainer {
     display: flex;
     justify-content: flex-start;
@@ -21,8 +24,13 @@
     }
   }
   img {
+    object-fit: cover;
+    object-position: center;
   }
   .postContent {
+    font-family: sfText;
+    font-size: 1.1rem;
+    line-height: 1.3rem;
   }
   .postActionsContainer {
     .postActionItem {

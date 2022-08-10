@@ -33,8 +33,6 @@ export class MainAppComponent implements OnInit, OnDestroy {
 
   isProfile: boolean = false;
 
-  isProfilePictureChanged: boolean;
-
   userDocument: UserDocument;
 
   posts: PostData[] = [];
@@ -178,7 +176,6 @@ export interface UserDocument {
   publicName: string;
   description: string;
   imageProfile: string;
-  isProfilePictureCustom: boolean;
 }
 
 export interface PostData {

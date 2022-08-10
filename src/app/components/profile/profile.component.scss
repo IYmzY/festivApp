@@ -19,12 +19,15 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     input,
     textarea {
       width: 100%;
       padding: 1em;
       border-radius: 1em;
-      margin: 1.5rem 0rem;
+      margin: 1rem 0rem;
       resize: none;
       outline: none;
       border: 1px solid gray;
@@ -37,6 +40,7 @@
       justify-content: center;
       cursor: pointer;
       position: relative;
+      margin-bottom: 1rem;
       span {
         position: absolute;
         bottom: 50%;
@@ -73,6 +77,25 @@
       right: 0;
       color: red;
       cursor: pointer;
+    }
+    button {
+      background: transparent;
+      color: white;
+      font-family: sfLogo;
+      font-size: 1.2rem;
+      border-radius: 2rem;
+      min-width: 8rem;
+      width: fit-content;
+      text-transform: capitalize;
+      margin: 0 0.5rem;
+      border: white 4px solid;
+      height: 3.5rem;
+      padding: 0rem 2rem;
+      &:hover {
+        border: white 4px solid;
+        background-color: white;
+        color: black;
+      }
     }
   }
 }

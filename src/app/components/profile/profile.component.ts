@@ -45,9 +45,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
-    this.loadCurrentPreview();
     this.getUserProfile();
-    this.loadRandomDefaultProfilePreview();
+    this.loadProfilePreview();
   }
   async onSaveProfile(
     nameInput: HTMLInputElement,
@@ -113,25 +112,11 @@ export class ProfileComponent implements OnInit {
             path: ['UsersProfile', this.currentUserID],
             data: {
               imageProfile: downloadUrl,
-              isProfilePictureCustom: true,
             },
           });
         },
       });
     }
-  }
-
-  loadCurrentPreview() {
-    const loadImgProfile = (url) => {
-      this.currentImage = url;
-    };
-    this.storage.getDownloadUrl({
-      path: ['/Avatar', this.currentUserID],
-      onComplete(url) {
-        loadImgProfile(url);
-      },
-      onFail: (err) => {},
-    });
   }
 
   async getUserProfile() {
@@ -149,7 +134,6 @@ export class ProfileComponent implements OnInit {
               path: ['UsersProfile', this.currentUserID],
               data: {
                 imageProfile: this.currentImage,
-                isProfilePictureCustom: false,
               },
             });
           }
@@ -179,19 +163,28 @@ export class ProfileComponent implements OnInit {
     this.show = false;
   }
 
-  async loadRandomDefaultProfilePreview() {
+  loadProfilePreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
     };
-    this.storage.getDownloadUrl({
-      path: ['/Avatar', `userIcon${this.randomProfileSetter}.webp`],
-      onComplete(url) {
-        loadImgProfile(url);
-      },
-      onFail(err) {
-        console.log(err);
-      },
-    });
+
+    this.storage
+      .getDownloadUrl({
+        path: ['/Avatar', `userIcon${this.randomProfileSetter}.webp`],
+        onComplete: (url) => {
+          loadImgProfile(url);
+        },
+        onFail(err) {},
+      })
+      .then(() => {
+        this.storage.getDownloadUrl({
+          path: ['/Avatar', this.currentUserID],
+          onComplete: (url) => {
+            loadImgProfile(url);
+          },
+          onFail(err) {},
+        });
+      });
   }
 
   getRandomImageProfile(min, max) {

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
 import { PostData } from 'src/app/pages/main-app/main-app.component';
 
 @Component({
