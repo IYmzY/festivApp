@@ -39,8 +39,6 @@ export class MainAppComponent implements OnInit, OnDestroy {
 
   posts: PostData[] = [];
 
-  isPreviewLoaded: boolean = false;
-
   currentUserID;
 
   subscription: Subscription;
@@ -73,9 +71,10 @@ export class MainAppComponent implements OnInit, OnDestroy {
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
-    this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
     this.getUserProfile();
     this.loadCurrentPreview();
+    this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
+    this.loadProfilePreview();
     this.getposts();
   }
 
@@ -112,35 +111,13 @@ export class MainAppComponent implements OnInit, OnDestroy {
   loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
-      this.isPreviewLoaded = true;
     };
     this.storage.getDownloadUrl({
       path: ['/Avatar', this.currentUserID],
       onComplete: (url) => {
         loadImgProfile(url);
       },
-      onFail(err) {
-        console.log(err);
-      },
-    });
-
-    if (this.isPreviewLoaded === false) {
-      this.loadRandomDefaultProfilePreview();
-    }
-  }
-
-  async loadRandomDefaultProfilePreview() {
-    const loadImgProfile = (url) => {
-      this.currentImage = url;
-    };
-    await this.storage.getDownloadUrl({
-      path: ['/Avatar', `userIcon${this.currentRandomImageProfile}.webp`],
-      onComplete: (url) => {
-        loadImgProfile(url);
-      },
-      onFail(err) {
-        console.log(err);
-      },
+      onFail(err) {},
     });
   }
 
@@ -148,6 +125,30 @@ export class MainAppComponent implements OnInit, OnDestroy {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  loadProfilePreview() {
+    const loadImgProfile = (url) => {
+      this.currentImage = url;
+    };
+
+    this.storage
+      .getDownloadUrl({
+        path: ['/Avatar', `userIcon${this.currentRandomImageProfile}.webp`],
+        onComplete: (url) => {
+          loadImgProfile(url);
+        },
+        onFail(err) {},
+      })
+      .then(() => {
+        this.storage.getDownloadUrl({
+          path: ['/Avatar', this.currentUserID],
+          onComplete: (url) => {
+            loadImgProfile(url);
+          },
+          onFail(err) {},
+        });
+      });
   }
 
   onPostButtonClick() {
@@ -177,6 +178,7 @@ export interface UserDocument {
   publicName: string;
   description: string;
   imageProfile: string;
+  isProfilePictureCustom: boolean;
 }
 
 export interface PostData {

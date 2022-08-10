@@ -37,8 +37,6 @@ export class ProfileComponent implements OnInit {
 
   currentUserID;
 
-  isPreviewLoaded: boolean = false;
-
   constructor(private festivDataService: SharingFestivDataService) {
     this.firestore = new FirebaseTSFirestore();
     this.auth = new FirebaseTSAuth();
@@ -49,7 +47,7 @@ export class ProfileComponent implements OnInit {
     this.currentUserID = this.auth.getAuth().currentUser?.uid;
     this.loadCurrentPreview();
     this.getUserProfile();
-    console.log(this.isPreviewLoaded);
+    this.loadRandomDefaultProfilePreview();
   }
   async onSaveProfile(
     nameInput: HTMLInputElement,
@@ -115,6 +113,7 @@ export class ProfileComponent implements OnInit {
             path: ['UsersProfile', this.currentUserID],
             data: {
               imageProfile: downloadUrl,
+              isProfilePictureCustom: true,
             },
           });
         },
@@ -125,7 +124,6 @@ export class ProfileComponent implements OnInit {
   loadCurrentPreview() {
     const loadImgProfile = (url) => {
       this.currentImage = url;
-      this.isPreviewLoaded = true;
     };
     this.storage.getDownloadUrl({
       path: ['/Avatar', this.currentUserID],
@@ -134,9 +132,6 @@ export class ProfileComponent implements OnInit {
       },
       onFail: (err) => {},
     });
-    if (this.isPreviewLoaded === false) {
-      this.loadRandomDefaultProfilePreview();
-    }
   }
 
   async getUserProfile() {
@@ -154,6 +149,7 @@ export class ProfileComponent implements OnInit {
               path: ['UsersProfile', this.currentUserID],
               data: {
                 imageProfile: this.currentImage,
+                isProfilePictureCustom: false,
               },
             });
           }
@@ -187,7 +183,7 @@ export class ProfileComponent implements OnInit {
     const loadImgProfile = (url) => {
       this.currentImage = url;
     };
-    await this.storage.getDownloadUrl({
+    this.storage.getDownloadUrl({
       path: ['/Avatar', `userIcon${this.randomProfileSetter}.webp`],
       onComplete(url) {
         loadImgProfile(url);
