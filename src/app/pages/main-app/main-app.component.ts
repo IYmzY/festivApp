@@ -75,6 +75,8 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
     this.loadProfilePreview();
     this.getposts();
+    console.warn = () => {};
+    console.error = () => {};
   }
 
   onLogoutClick() {
