@@ -43,7 +43,6 @@ export class CreatePostComponent implements OnInit {
     if (this.fileToUploadInPost) {
       const reader = new FileReader();
       reader.readAsDataURL(this.fileToUploadInPost);
-      console.log(this.fileToUploadInPost);
       reader.onload = () => {
         this.currentImageInPost = reader.result as string;
       };

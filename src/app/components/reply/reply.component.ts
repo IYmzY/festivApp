@@ -21,7 +21,6 @@ export class ReplyComponent implements OnInit {
 
   ngOnInit(): void {
     this.getComments();
-    console.log(this.getComments());
   }
 
   getComments() {
