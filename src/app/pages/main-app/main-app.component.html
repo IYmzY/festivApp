@@ -7,7 +7,7 @@
         <div class="profileContainer">
             <button class="profileButton" (click)="onProfileClick()" mat-flat-button>
                 <img [src]="currentImage" class="profileImage">
-                <span>Hello {{currentUsername}}</span></button>
+                <span>{{currentUsername}}</span></button>
             <button class=" logOutButton" (click)="onLogoutClick()" mat-flat-button>Log Out</button>
             <app-profile [show]="profileShowState()" [randomProfileSetter]="currentRandomImageProfile"
                 (isProfile)="checkIsUpdated($event)">

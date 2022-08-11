@@ -15,10 +15,6 @@ export class AppComponent {
 
   firestore = new FirebaseTSFirestore();
 
-  userHasProfile = false;
-
-  userDocument: any;
-
   constructor(private router: Router) {
     this.auth.listenToSignInStateChanges((user) => {
       this.auth.checkSignInState({
@@ -33,7 +29,6 @@ export class AppComponent {
         },
         whenSignedInAndEmailVerified: (user) => {
           this.router.navigate(['']);
-          this.getUserProfile();
         },
         whenChanged: (user) => {},
       });
@@ -42,16 +37,5 @@ export class AppComponent {
 
   loggedIn() {
     return this.auth.isSignedIn();
-  }
-
-  getUserProfile() {
-    this.firestore.listenToDocument({
-      name: 'Getting DOCUMENT',
-      path: ['UsersProfile', this.auth.getAuth().currentUser?.uid!],
-      onUpdate: (result) => {
-        result.data();
-        this.userHasProfile = result.exists;
-      },
-    });
   }
 }

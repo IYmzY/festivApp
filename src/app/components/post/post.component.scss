@@ -1,7 +1,7 @@
 .postContainer {
   width: 38vw;
   min-width: 350px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   .postHeaderContainer {
     display: flex;
     justify-content: flex-start;
@@ -13,6 +13,7 @@
       object-fit: cover;
       border-radius: 50%;
       margin-right: 0.75rem;
+      pointer-events: none;
     }
     .postTitle {
       background: transparent;

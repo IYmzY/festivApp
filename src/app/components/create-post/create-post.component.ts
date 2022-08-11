@@ -65,17 +65,17 @@ export class CreatePostComponent implements OnInit {
   }
   onShareClick(post: HTMLTextAreaElement) {
     let postContent = post.value;
-    let postId = this.firestore.genDocId();
+    let postID = this.firestore.genDocId();
     if (this.fileToUploadInPost && postContent.length <= 350) {
       this.storage.upload({
         uploadName: 'upload Image & post content',
-        path: ['Posts', postId, 'imagePost'],
+        path: ['Posts', postID, 'imagePost'],
         data: {
           data: this.fileToUploadInPost,
         },
         onComplete: (downloadUrl) => {
           this.firestore.create({
-            path: ['Posts', postId],
+            path: ['Posts', postID],
             data: {
               postContent: postContent,
               creatorId: this.auth.getAuth().currentUser?.uid,

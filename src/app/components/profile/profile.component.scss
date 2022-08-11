@@ -3,7 +3,7 @@
   top: 0;
   right: 0;
   height: 100vh;
-  background-color: rgba(29, 29, 29, 0.5);
+  background-color: rgba(29, 29, 29, 0.8);
   z-index: 9;
   transition-duration: 0.5s;
   overflow: hidden;
@@ -13,7 +13,7 @@
 
   .profileContent {
     width: 100%;
-    max-width: 500px;
+    max-width: 80vw;
     padding: 2em;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -22,19 +22,38 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    input,
-    textarea {
-      width: 100%;
-      padding: 1em;
-      border-radius: 1em;
+    .inputsContainer {
       margin: 1rem 0rem;
-      resize: none;
-      outline: none;
-      border: 1px solid gray;
-      box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
+      input,
+      textarea {
+        width: 100%;
+        padding: 1em;
+        border-radius: 1em;
+        margin-bottom: 0.25rem;
+        resize: none;
+        outline: none;
+        font-family: sfTitle;
+        border: 1px solid gray;
+        font-size: 1rem;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        color: black;
+        height: 7rem;
+        &.usernameContainer {
+          height: 3rem;
+        }
+      }
+      .profileRules {
+        font-family: sfText;
+        font-style: italic;
+        color: rgb(255 255 255 / 70%);
+        font-weight: 100;
+        margin-right: auto;
+        margin-left: 0.5rem;
+      }
     }
+
     .profileImageContainer {
       display: flex;
       justify-content: center;
@@ -73,10 +92,17 @@
     }
     .closeIcon {
       position: absolute;
-      top: 0;
-      right: 0;
-      color: red;
+      right: 10vw;
       cursor: pointer;
+      border-radius: 50%;
+      height: 5rem;
+      padding: 0px;
+      margin: 0;
+      font-family: sfTitle;
+      font-size: 2.5rem;
+      min-width: 5rem;
+      font-weight: 600;
+      width: 4rem !important;
     }
     button {
       background: transparent;

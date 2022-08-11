@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
   ) {
     let name = nameInput.value.trim();
     let description = descriptionInput.value.trim();
-    if (name.length > 0) {
+    if (name.length > 0 && name.length <= 20) {
       await this.firestore.update({
         path: ['UsersProfile', this.currentUserID],
         data: {
@@ -68,7 +68,7 @@ export class ProfileComponent implements OnInit {
         onFail: (err) => {},
       });
     }
-    if (description.length > 0) {
+    if (description.length > 0 && description.length <= 250) {
       await this.firestore.update({
         path: ['UsersProfile', this.currentUserID],
         data: {

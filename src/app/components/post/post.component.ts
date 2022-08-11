@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FirebaseTSFirestore } from 'firebasets/firebasetsFirestore/firebaseTSFirestore';
+import { MatDialog } from '@angular/material/dialog';
 import { PostData } from 'src/app/pages/main-app/main-app.component';
+import { ReplyComponent } from '../reply/reply.component';
 
 @Component({
   selector: 'app-post',
@@ -8,7 +9,8 @@ import { PostData } from 'src/app/pages/main-app/main-app.component';
   styleUrls: ['./post.component.scss'],
 })
 export class PostComponent implements OnInit {
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
+
   @Input() postData: PostData;
 
   @Input() currentUsername: string;
@@ -16,4 +18,8 @@ export class PostComponent implements OnInit {
   @Input() currentImage;
 
   ngOnInit(): void {}
+
+  onCommentClick() {
+    this.dialog.open(ReplyComponent, { data: this.postData.postID });
+  }
 }

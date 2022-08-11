@@ -8,8 +8,6 @@
         {{postData.postContent}}
     </mat-card-content>
     <mat-card-actions class="postActionsContainer">
-        <mat-icon class="postActionItem" color="accent">chat_bubble_outline</mat-icon>
-        <mat-icon class="postActionItem" color="accent">favorite_border</mat-icon>
-        <mat-icon class="postActionItem" color="accent">save</mat-icon>
+        <mat-icon class="postActionItem" (click)="onCommentClick()" color="accent">chat_bubble_outline</mat-icon>
     </mat-card-actions>
 </mat-card>

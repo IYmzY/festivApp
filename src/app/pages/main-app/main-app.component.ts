@@ -33,7 +33,7 @@ export class MainAppComponent implements OnInit, OnDestroy {
 
   isProfile: boolean = false;
 
-  userDocument: UserDocument;
+  private static userDocument: UserDocument;
 
   posts: PostData[] = [];
 
@@ -54,6 +54,7 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.subscription = this.festivDataService
       .getPostsUpdate()
       .subscribe(() => {
+        //  this.posts = [];
         this.getposts();
       });
   }
@@ -92,14 +93,22 @@ export class MainAppComponent implements OnInit, OnDestroy {
     return this.isProfile;
   }
 
-  async getUserProfile() {
-    await this.firestore.listenToDocument({
+  public static getUserDocument() {
+    return MainAppComponent.userDocument;
+  }
+
+  getUserProfile() {
+    this.firestore.listenToDocument({
       name: 'Getting DOCUMENT',
       path: ['UsersProfile', this.currentUserID!],
       onUpdate: (result) => {
-        this.userDocument = <UserDocument>result.data();
-        if (result.exists && this.userDocument.publicName.length > 0) {
-          this.currentUsername = this.userDocument.publicName;
+        MainAppComponent.userDocument = <UserDocument>result.data();
+        MainAppComponent.userDocument.userID = this.currentUserID;
+        if (
+          result.exists &&
+          MainAppComponent.userDocument.publicName.length > 0
+        ) {
+          this.currentUsername = MainAppComponent.userDocument.publicName;
         }
         this.isProfile = !result.exists;
       },
@@ -154,16 +163,17 @@ export class MainAppComponent implements OnInit, OnDestroy {
   }
 
   async getposts() {
-    await this.firestore.getCollection({
+    await this.firestore.listenToCollection({
+      name: 'Posts Listener',
       path: ['Posts'],
       where: [new OrderBy('timestamp', 'desc')],
-      onComplete: (result) => {
-        result.docs.forEach((doc) => {
-          let post = <PostData>doc.data();
-          this.posts.push(post);
+      onUpdate: (result) => {
+        result.docChanges().forEach((postDoc) => {
+          if (postDoc.type === 'added') {
+            this.posts.unshift(<PostData>postDoc.doc.data());
+          }
         });
       },
-      onFail: (err) => {},
     });
   }
 
@@ -176,6 +186,7 @@ export interface UserDocument {
   publicName: string;
   description: string;
   imageProfile: string;
+  userID: string;
 }
 
 export interface PostData {
@@ -184,4 +195,5 @@ export interface PostData {
   imageUrl?: string;
   creatorUsername: string;
   imageProfile: string;
+  postID: string;
 }

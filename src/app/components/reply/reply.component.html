@@ -1,0 +1,22 @@
+<div class="commentsContainer">
+    <h2>Comments</h2>
+    <div class="commentsContentContainer">
+        <div *ngFor="let comment of comments">
+            <p>{{comment?.creatorUsername}}</p>
+            <p>{{comment?.comment}}</p>
+            <!-- <div>
+                    <img [src]="comment.creatorImageProfileUrl">
+                    <p>{{comment.creatorUsername}}</p>
+                </div> -->
+            <!-- <div>
+                    <p>{{comment.comment}}</p>
+                </div> -->
+        </div>
+    </div>
+    <div class="commentsActionsButtonsContainer">
+        <input placeholder="Comment..." class="commentContent" #commentContent>
+        <button mat-flat-button color="accent" class="sendButton" (click)="onSendClick(commentContent)">
+            <mat-icon>send</mat-icon>
+        </button>
+    </div>
+</div>

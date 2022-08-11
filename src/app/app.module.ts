@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { PostComponent } from './components/post/post.component';
+import { ReplyComponent } from './components/reply/reply.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { PostComponent } from './components/post/post.component';
     ProfileComponent,
     CreatePostComponent,
     PostComponent,
+    ReplyComponent,
   ],
   imports: [
     BrowserModule,

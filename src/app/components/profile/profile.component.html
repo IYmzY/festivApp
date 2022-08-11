@@ -1,13 +1,21 @@
 <div class="profileContainer" [ngClass]="{'active': show, 'notActive':!show}">
     <div class="profileContent">
-        <img src="../../../assets/icons/closeIcon.svg" class="closeIcon" (click)="onCloseProfile()">
+        <button (click)="onCloseProfile()" mat-flat-button color="accent" class="closeIcon">
+            x
+        </button>
         <label for="file" class="profileImageContainer">
             <input type="file" id="file" (change)="handleFileInput($event)" />
             <span>Upload avatar</span>
             <img [src]="currentImage" class="image-preview">
         </label>
-        <input #nameInput [placeholder]="currentUsername" required>
-        <textarea #descriptionInput [placeholder]="currentDescription"></textarea>
+        <div class="inputsContainer">
+            <input #nameInput [placeholder]="currentUsername" maxlength="20" class="usernameContainer" required>
+            <span class="profileRules">Username must be under 20 characters</span>
+        </div>
+        <div class="inputsContainer">
+            <textarea #descriptionInput [placeholder]="currentDescription" maxlength="250"></textarea>
+            <span class="profileRules">Description must be under 250 characters</span>
+        </div>
         <button mat-flat-button color="accent" (click)="onSaveProfile(nameInput,descriptionInput)">Save
             profile</button>
     </div>
