@@ -43,7 +43,11 @@
       width: 2rem;
       display: flex;
       min-width: 2rem;
-
+      justify-content: center;
+      .likeCount {
+        font-family: sfTitle;
+        font-size: 1.2rem;
+      }
       img {
         height: 2rem;
       }

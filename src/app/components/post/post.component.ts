@@ -33,13 +33,16 @@ export class PostComponent implements OnInit {
 
   like: number = 0;
 
+  allLikesPostCount: AllLikesPostCount;
+
   commentIcon: string = 'defaultCommentIcon';
 
   allLikes: number = 0;
 
+  removeAddLikeIcon;
+
   ngOnInit(): void {
     this.getLikes();
-    //this.getCurrentLikeUser();
   }
 
   onCommentClick() {
@@ -56,46 +59,27 @@ export class PostComponent implements OnInit {
           if (postLikeDoc.type === 'added' || postLikeDoc.type === 'modified') {
             this.likes = [];
             this.likes.push(<Like>postLikeDoc.doc.data());
-            //this.likeCount();
+
             if (postLikeDoc.doc.data().like === 1) {
               this.allLikes++;
+            }
+            if (
+              postLikeDoc.type === 'modified' &&
+              postLikeDoc.doc.data().like === 0
+            ) {
+              this.allLikes--;
             }
             if (
               postLikeDoc.doc.data().creatorId ==
               MainAppComponent.getUserDocument().userID
             ) {
               this.like = postLikeDoc.doc.data()?.like;
-              console.log('mon nombre de like à moi' + this.like);
+              this.like < 1
+                ? (this.removeAddLikeIcon = 'addLikeIcon')
+                : (this.removeAddLikeIcon = 'removeLikeIcon');
             }
           }
         });
-      },
-    });
-  }
-
-  likeCount() {
-    this.likes.forEach((like) => {
-      this.allLikes += like.like;
-      console.log('je roule mon like' + this.allLikes);
-    });
-  }
-
-  getCurrentLikeUser() {
-    this.firestore.getDocument({
-      path: [
-        'Posts',
-        this.postData.postID,
-        'Likes',
-        MainAppComponent.getUserDocument().userID!,
-      ],
-      onComplete: (result) => {
-        if (result.exists) {
-          this.like = result.data()?.like;
-          console.log('mon nombre de like à moi' + this.like);
-        }
-      },
-      onFail(err) {
-        console.log(err);
       },
     });
   }
@@ -104,7 +88,6 @@ export class PostComponent implements OnInit {
     if (this.like < 1) {
       this.like = 1;
     } else {
-      this.allLikes--;
       this.like = 0;
     }
     this.firestore.create({
@@ -120,11 +103,26 @@ export class PostComponent implements OnInit {
         creatorUsername: MainAppComponent.getUserDocument().publicName,
         timestamp: FirebaseTSApp.getFirestoreTimestamp(),
       },
-      onComplete(docId) {},
+      onComplete: (docId) => {
+        this.firestore.update({
+          path: ['Posts', this.postData.postID],
+          data: {
+            likesCount: this.allLikes,
+          },
+        });
+      },
     });
+  }
 
-    console.log(this.like);
-    console.log(this.allLikes);
+  getTotalCount() {
+    this.firestore.listenToDocument({
+      name: 'PostLikesCountListener',
+      path: ['Posts', this.postData.postID],
+      onUpdate: (result) => {
+        this.allLikesPostCount = <AllLikesPostCount>result.data();
+        this.allLikes = this.allLikesPostCount.likesCount;
+      },
+    });
   }
 }
 
@@ -133,4 +131,8 @@ export interface Like {
   creatorId: string;
   creatorUsername: string;
   timestamp: firebase.default.firestore.Timestamp;
+}
+
+export interface AllLikesPostCount {
+  likesCount: number;
 }
