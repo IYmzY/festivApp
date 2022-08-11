@@ -40,3 +40,10 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.postActionItem {
+  .mat-button-ripple.mat-ripple,
+  .mat-button-focus-overlay {
+    width: 2rem;
+  }
+}

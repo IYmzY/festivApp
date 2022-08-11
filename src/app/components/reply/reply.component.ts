@@ -6,7 +6,6 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FirebaseTSApp } from 'firebasets/firebasetsApp/firebaseTSApp';
 import { MainAppComponent } from 'src/app/pages/main-app/main-app.component';
-//import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-reply',
@@ -17,8 +16,6 @@ export class ReplyComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private postID: string) {}
 
   firestore = new FirebaseTSFirestore();
-
-  //afs: AngularFirestore;
 
   comments: Comment[] = [];
 

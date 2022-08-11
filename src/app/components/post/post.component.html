@@ -8,6 +8,14 @@
         {{postData.postContent}}
     </mat-card-content>
     <mat-card-actions class="postActionsContainer">
-        <mat-icon class="postActionItem" (click)="onCommentClick()" color="accent">chat_bubble_outline</mat-icon>
+        <button mat-flat-button class="postActionItem">
+            <img (click)="onCommentClick()" class="commentClickAction" (mouseover)="commentIcon='addCommentIcon'"
+                (mouseout)="commentIcon='defaultCommentIcon'" src="../../../assets/icons/{{commentIcon}}.svg">
+        </button>
+        <button mat-flat-button class="postActionItem">
+            <img (click)="onLikeClick()" (mouseover)="likeIcon='plusLikeIcon'" (mouseout)="likeIcon='defaultLikeIcon'"
+                class="likeClickAction" src="../../../assets/icons/{{likeIcon}}.svg">
+            <span class="likeCount">{{allLikes}}</span>
+        </button>
     </mat-card-actions>
 </mat-card>

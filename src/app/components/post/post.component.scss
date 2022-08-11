@@ -34,9 +34,22 @@
     line-height: 1.3rem;
   }
   .postActionsContainer {
+    display: flex;
+    align-items: center;
     .postActionItem {
-      margin-left: 0.5rem;
+      margin-left: 1rem;
       cursor: pointer;
+      padding: 0;
+      width: 2rem;
+      display: flex;
+      min-width: 2rem;
+
+      img {
+        height: 2rem;
+      }
+      &.postActionItem:first-child {
+        margin-left: 0.5rem;
+      }
     }
   }
 }
