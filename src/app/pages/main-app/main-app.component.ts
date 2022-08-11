@@ -162,18 +162,19 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.dialog.open(CreatePostComponent);
   }
 
-  async getposts() {
-    await this.firestore.listenToCollection({
-      name: 'Posts Listener',
+  getposts() {
+    this.firestore.getCollection({
       path: ['Posts'],
       where: [new OrderBy('timestamp', 'desc')],
-      onUpdate: (result) => {
-        result.docChanges().forEach((postDoc) => {
-          if (postDoc.type === 'added') {
-            this.posts.unshift(<PostData>postDoc.doc.data());
-          }
+      onComplete: (result) => {
+        result.docs.forEach((doc) => {
+          let post = <PostData>doc.data();
+          post.postID = doc.id;
+          this.posts = [];
+          this.posts.push(post);
         });
       },
+      onFail: (err) => {},
     });
   }
 

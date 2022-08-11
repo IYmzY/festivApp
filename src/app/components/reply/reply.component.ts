@@ -24,14 +24,15 @@ export class ReplyComponent implements OnInit {
 
   ngOnInit(): void {
     this.getComments();
+    console.log(this.getComments());
   }
 
-  async getComments() {
+  getComments() {
     if (this.postID) {
-      await this.firestore.listenToCollection({
+      this.firestore.listenToCollection({
         name: 'PostCommentsListener',
         path: ['Posts', this.postID, 'PostComments'],
-        where: [new OrderBy('timeStamp', 'asc')],
+        where: [new OrderBy('timestamp', 'asc')],
         onUpdate: (result) => {
           result.docChanges().forEach((postCommentDoc) => {
             if (postCommentDoc.type === 'added') {
@@ -43,8 +44,11 @@ export class ReplyComponent implements OnInit {
     }
   }
 
-  onSendClick(commentContent: HTMLInputElement) {
-    if (commentContent.value.length > 0) {
+  onSendClick(commentContent: HTMLTextAreaElement) {
+    if (
+      commentContent.value.trim().length > 0 &&
+      commentContent.value.trim().length <= 150
+    ) {
       this.firestore.create({
         path: ['Posts', this.postID, 'PostComments'],
         data: {
@@ -53,12 +57,20 @@ export class ReplyComponent implements OnInit {
           creatorUsername: MainAppComponent.getUserDocument().publicName,
           creatorImageProfileUrl:
             MainAppComponent.getUserDocument().imageProfile,
-          timeStamp: FirebaseTSApp.getFirestoreTimestamp(),
+          timestamp: FirebaseTSApp.getFirestoreTimestamp(),
         },
         onComplete: (docId) => {
           commentContent.value = '';
         },
       });
+    }
+  }
+
+  isCommentCreator(comment: Comment) {
+    if (comment.creatorId == MainAppComponent.getUserDocument().userID) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
@@ -68,5 +80,5 @@ export interface Comment {
   creatorId: string;
   creatorUsername: string;
   creatorImageProfileUrl: string;
-  timeStamp: firebase.default.firestore.Timestamp;
+  timestamp: firebase.default.firestore.Timestamp;
 }
