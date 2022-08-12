@@ -39,7 +39,7 @@ export class PostComponent implements OnInit {
 
   allLikes: number = 0;
 
-  removeAddLikeIcon;
+  removeAddLikeIcon: string = 'addLikeIcon';
 
   ngOnInit(): void {
     this.getLikes();
