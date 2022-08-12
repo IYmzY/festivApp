@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class EmailVerificationComponent implements OnInit {
   auth = new FirebaseTSAuth();
+  reload;
 
   constructor(private router: Router) {}
 
@@ -17,20 +18,10 @@ export class EmailVerificationComponent implements OnInit {
       this.router.navigate(['connect']);
     }
     this.auth.sendVerificationEmail();
-    this.refreshVerify();
   }
 
   onResendClick() {
     this.auth.sendVerificationEmail();
-  }
-
-  refreshVerify() {
-    if (
-      this.auth.isSignedIn() &&
-      this.auth.getAuth().currentUser?.emailVerified
-    ) {
-      this.router.navigate(['']);
-    }
   }
 
   onVerifyClick() {
@@ -41,6 +32,7 @@ export class EmailVerificationComponent implements OnInit {
       this.router.navigate(['connect']);
     } else {
       window.alert("You're account isn't verrified yet");
+      location.reload();
     }
   }
 
