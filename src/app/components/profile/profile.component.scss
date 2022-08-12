@@ -103,6 +103,10 @@
       min-width: 5rem;
       font-weight: 600;
       width: 4rem !important;
+      @media screen and (max-width: 700px) {
+        top: -5vh;
+        right: 0;
+      }
     }
     button {
       background: transparent;

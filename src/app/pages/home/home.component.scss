@@ -8,12 +8,25 @@
     height: 100vh;
     background: rgba($color: #000000, $alpha: 1);
     display: flex;
+    @media screen and (max-width: 700px) {
+      flex-direction: column;
+    }
     .landingContent {
       height: 100%;
       width: 50%;
       margin-left: 5vw;
       position: relative;
       z-index: 1;
+      @media screen and (max-width: 700px) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: fit-content;
+        margin-bottom: 2rem;
+      }
+
       h1 {
         color: white;
         font-family: sfLogo;
@@ -21,6 +34,11 @@
         margin-bottom: 10vh;
         margin-top: 8vh;
         letter-spacing: 10px;
+        @media screen and (max-width: 700px) {
+          font-size: 2.5rem;
+          margin: 1rem 0;
+          align-self: flex-start;
+        }
       }
       p {
         color: white;
@@ -28,6 +46,12 @@
         font-size: 3rem;
         max-width: 36vw;
         letter-spacing: 2px;
+        @media screen and (max-width: 700px) {
+          max-width: 84vw;
+          align-self: center;
+          margin: 1rem 0;
+          font-size: 2rem;
+        }
       }
     }
     .landingConnexion {
@@ -39,6 +63,15 @@
       position: relative;
       margin-left: 5vw;
       z-index: 1;
+      @media screen and (max-width: 700px) {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: fit-content;
+      }
     }
   }
   .backgroundContainer {
@@ -51,12 +84,22 @@
       top: 3vh;
       width: 15vw;
       right: 43vw;
+      @media screen and (max-width: 700px) {
+        top: 2.5vh;
+        width: 12vw;
+        right: 6vw;
+      }
     }
     .bottomBackground {
       position: absolute;
       width: 23vw;
       top: 40vh;
       right: 40vw;
+      @media screen and (max-width: 700px) {
+        top: 5vh;
+        width: 12vw;
+        right: 6vw;
+      }
     }
   }
 }

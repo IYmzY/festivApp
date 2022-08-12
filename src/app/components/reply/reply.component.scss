@@ -1,6 +1,10 @@
 .commentsContainer {
   height: 60vh;
   width: 32vw;
+  @media screen and (max-width: 700px) {
+    height: 60vh;
+    width: 70vw;
+  }
   h2 {
     font-weight: 600;
     font-size: 1.2rem;
@@ -16,6 +20,9 @@
     -webkit-box-sizing: border-box;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    @media screen and (max-width: 700px) {
+      height: 48vh;
+    }
     &::-webkit-scrollbar {
       display: none;
     }
@@ -78,6 +85,10 @@
     align-items: center;
     height: 2.5rem;
     margin-top: 1rem;
+    @media screen and (max-width: 700px) {
+      height: 1.5rem;
+      margin-top: 2rem;
+    }
     .commentContent {
       width: 80%;
       padding: 0.5rem 0.5rem 0rem 0.5rem;
