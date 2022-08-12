@@ -74,8 +74,8 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
     this.loadProfilePreview();
     this.getposts();
-    //console.warn = () => {};
-    //console.error = () => {};
+    console.warn = () => {};
+    console.error = () => {};
   }
 
   onLogoutClick() {
@@ -167,11 +167,13 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.firestore.listenToCollection({
       name: 'PostsListener',
       path: ['Posts'],
-      where: [new OrderBy('timestamp', 'desc')],
+      where: [new OrderBy('timestamp', 'asc')],
       onUpdate: (result) => {
         result.docChanges().forEach((postDoc) => {
           if (postDoc.type === 'added') {
-            this.posts.unshift(<PostData>postDoc.doc.data());
+            let post = <PostData>postDoc.doc.data();
+            post.postID = postDoc.doc.id;
+            this.posts.unshift(post);
           }
         });
       },

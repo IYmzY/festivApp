@@ -34,6 +34,8 @@ export class CreatePostComponent implements OnInit {
 
   currentImageProfileUrl;
 
+  clickShareCounter: number = 0;
+
   ngOnInit(): void {
     this.getUserProfile();
   }
@@ -65,7 +67,13 @@ export class CreatePostComponent implements OnInit {
   onShareClick(post: HTMLTextAreaElement) {
     let postContent = post.value;
     let postID = this.firestore.genDocId();
-    if (this.fileToUploadInPost && postContent.length <= 350) {
+
+    if (
+      this.fileToUploadInPost &&
+      postContent.length <= 350 &&
+      this.clickShareCounter < 1
+    ) {
+      this.clickShareCounter += 1;
       this.storage.upload({
         uploadName: 'upload Image & post content',
         path: ['Posts', postID, 'imagePost'],
@@ -84,8 +92,8 @@ export class CreatePostComponent implements OnInit {
               imageProfile: this.currentImageProfileUrl,
             },
             onComplete: (docId) => {
-              this.dialog.close();
               this.festivDataService.sendPostsUpdate(true);
+              this.dialog.close();
             },
           });
         },
