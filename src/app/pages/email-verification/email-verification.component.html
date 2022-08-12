@@ -1,4 +1,8 @@
 <div class="emailVerificationContainer">
     <h1>Your Email is not verified</h1>
-    <button mat-flat-button (click)="onResendClick()">Resend verification email</button>
+    <div>
+        <button mat-flat-button (click)="onResendClick()">Resend verification email</button>
+        <button mat-flat-button (click)="onVerifyClick()">Verify</button>
+        <button mat-flat-button (click)="onLogoutClick()">LogOut</button>
+    </div>
 </div>

@@ -54,7 +54,6 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.subscription = this.festivDataService
       .getPostsUpdate()
       .subscribe(() => {
-        //  this.posts = [];
         this.getposts();
       });
   }
@@ -75,8 +74,8 @@ export class MainAppComponent implements OnInit, OnDestroy {
     this.currentRandomImageProfile = this.getRandomImageProfile(1, 15);
     this.loadProfilePreview();
     this.getposts();
-    console.warn = () => {};
-    console.error = () => {};
+    //console.warn = () => {};
+    //console.error = () => {};
   }
 
   onLogoutClick() {
@@ -165,18 +164,17 @@ export class MainAppComponent implements OnInit, OnDestroy {
   }
 
   getposts() {
-    this.firestore.getCollection({
+    this.firestore.listenToCollection({
+      name: 'PostsListener',
       path: ['Posts'],
       where: [new OrderBy('timestamp', 'desc')],
-      onComplete: (result) => {
-        result.docs.forEach((doc) => {
-          let post = <PostData>doc.data();
-          post.postID = doc.id;
-          this.posts = [];
-          this.posts.push(post);
+      onUpdate: (result) => {
+        result.docChanges().forEach((postDoc) => {
+          if (postDoc.type === 'added') {
+            this.posts.unshift(<PostData>postDoc.doc.data());
+          }
         });
       },
-      onFail: (err) => {},
     });
   }
 

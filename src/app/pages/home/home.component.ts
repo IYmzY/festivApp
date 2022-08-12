@@ -11,7 +11,6 @@ export class HomeComponent implements OnInit {
   auth = new FirebaseTSAuth();
 
   constructor(private router: Router) {}
-
   ngOnInit(): void {
     if (
       this.auth.isSignedIn() &&

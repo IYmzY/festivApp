@@ -1,8 +1,12 @@
 .homeContainer {
   width: 100vw;
-  height: 95vh;
+  height: 100vh;
   position: relative;
   overflow: hidden;
+  @media screen and (max-width: 700px) {
+    flex-direction: column;
+    height: 95vh;
+  }
   .contentContainer {
     width: 100vw;
     height: 100vh;

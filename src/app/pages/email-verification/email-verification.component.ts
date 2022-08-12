@@ -13,20 +13,40 @@ export class EmailVerificationComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    if (
-      this.auth.isSignedIn() &&
-      !this.auth.getAuth().currentUser?.emailVerified
-    ) {
-      this.router.navigate(['emailVerification']);
-    }
     if (!this.auth.isSignedIn()) {
       this.router.navigate(['connect']);
     }
     this.auth.sendVerificationEmail();
+    this.refreshVerify();
   }
 
   onResendClick() {
     this.auth.sendVerificationEmail();
-    location.reload();
+  }
+
+  refreshVerify() {
+    if (
+      this.auth.isSignedIn() &&
+      this.auth.getAuth().currentUser?.emailVerified
+    ) {
+      this.router.navigate(['']);
+    }
+  }
+
+  onVerifyClick() {
+    if (
+      this.auth.isSignedIn() &&
+      this.auth.getAuth().currentUser?.emailVerified
+    ) {
+      this.router.navigate(['connect']);
+    } else {
+      window.alert("You're account isn't verrified yet");
+    }
+  }
+
+  onLogoutClick() {
+    this.auth.signOut().then(() => {
+      this.router.navigate(['connect']);
+    });
   }
 }
