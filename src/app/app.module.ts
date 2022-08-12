@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { PostComponent } from './components/post/post.component';
 import { ReplyComponent } from './components/reply/reply.component';
+import { NgxGoogleAnalyticsModule } from 'ngx-google-analytics';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ReplyComponent } from './components/reply/reply.component';
   ],
   imports: [
     BrowserModule,
+    NgxGoogleAnalyticsModule.forRoot('G-7ELJFHZ9KW'),
     AppRoutingModule,
     BrowserAnimationsModule,
     MatCardModule,
